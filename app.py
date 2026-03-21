@@ -132,9 +132,13 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
                     
-                    # --- LIMPEZA DE CONTATO ADICIONADA AQUI ---
+                    # --- LIMPEZA DE CONTATO CORRIGIDA ---
                     num_bruto = str(r['Contato'])
-                    c_limpo = re.sub(r'\D', '', num_bruto) # Remove tudo que não for número
+                    # Remove o .0 se houver
+                    if '.' in num_bruto: num_bruto = num_bruto.split('.')[0]
+                    # Remove tudo que não for número
+                    c_limpo = re.sub(r'\D', '', num_bruto) 
+                    
                     if c_limpo:
                         if not c_limpo.startswith("55"): c_limpo = "55" + c_limpo
                         st.link_button("💬 Chamar no WhatsApp", f"https://wa.me/{c_limpo}")
