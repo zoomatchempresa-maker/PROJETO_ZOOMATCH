@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
+import re # Importado para a limpeza do WhatsApp
 
 # 1. Configuracao da Pagina
 st.set_page_config(page_title="AgroMatch | Conectando o Campo", page_icon="🐄", layout="centered")
@@ -131,11 +132,14 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
                     
-                    # Limpeza do numero do profissional para evitar erro 404
-                    c_limpo = str(r['Contato']).replace("(", "").replace(")", "").replace("-", "").replace(" ", "").strip()
-                    if not c_limpo.startswith("55"): c_limpo = "55" + c_limpo
-                    
-                    st.link_button("💬 Chamar no WhatsApp", f"https://wa.me/{c_limpo}")
+                    # --- LIMPEZA DE CONTATO ADICIONADA AQUI ---
+                    num_bruto = str(r['Contato'])
+                    c_limpo = re.sub(r'\D', '', num_bruto) # Remove tudo que não for número
+                    if c_limpo:
+                        if not c_limpo.startswith("55"): c_limpo = "55" + c_limpo
+                        st.link_button("💬 Chamar no WhatsApp", f"https://wa.me/{c_limpo}")
+                    else:
+                        st.warning("Número de contato inválido.")
         else:
             st.info("Nenhum profissional cadastrado.")
             
