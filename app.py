@@ -28,9 +28,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- ⚙️ CONFIGURAÇÕES DE ACESSO ---
-CHAVE_MESTRE = "Agro2024"  # Sua chave mestre
-SEU_WHATSAPP = "5581999998888" # COLOQUE SEU NÚMERO AQUI (DDI + DDD + NÚMERO)
+# --- ⚙️ CONFIGURAÇÕES DE ACESSO (ATUALIZADO) ---
+CHAVE_MESTRE = "Z00-M4tch-2026#Px"  # <--- NOVA SENHA DEFINIDA AQUI
+SEU_WHATSAPP = "5581999998888" # COLOQUE SEU NÚMERO AQUI
 
 # --- ⚙️ BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -65,7 +65,7 @@ if menu == "📝 Sou Especialista (Cadastro)":
         uf = st.selectbox("Estado de Atuação", ESTADOS)
         reg = st.text_input("Registro (CRMV/CREA)")
         esp = st.multiselect("Suas Especialidades", MAPA_AGRO[prof])
-        tel = st.text_input("WhatsApp (Ex: 81999998888)")
+        tel = st.text_input("WhatsApp (Ex: 55819...)")
         sal = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
         bio = st.text_area("Resumo da sua Experiência")
         
@@ -107,16 +107,13 @@ elif menu == "🚜 Sou Produtor (Contratar)":
             st.info("Nenhum profissional cadastrado ainda.")
     elif senha_inserida != "":
         st.error("Chave incorreta!")
-        st.markdown("---")
-        st.write("Ainda não tem a chave? Solicite ao administrador:")
-        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text=Olá,%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch")
+        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}")
     else:
         st.info("Digite a chave para continuar.")
-        st.link_button("📲 Não tenho a chave", f"https://wa.me/{SEU_WHATSAPP}?text=Olá,%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch")
     st.markdown("</div>", unsafe_allow_html=True)
 
 else:
-    # --- CARD "QUEM SOMOS" (O QUE VOCÊ PEDIU) ---
+    # --- CARD "QUEM SOMOS" ---
     st.markdown("""
     <div class='content-card' style='text-align:center;'>
         <h2 style='color: #1b4332;'>Bem-vindo ao AgroMatch</h2>
