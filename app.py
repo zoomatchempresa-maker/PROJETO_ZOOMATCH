@@ -5,9 +5,10 @@ import pandas as pd
 # 1. Configuração da Página
 st.set_page_config(page_title="AgroMatch", page_icon="🐄", layout="centered")
 
-# --- 🎨 ESTILIZAÇÃO VISUAL ---
+# --- 🎨 ESTILIZAÇÃO VISUAL (Verde Escuro) ---
 st.markdown("""
     <style>
+    /* Fundo da página */
     .stApp {
         background-image: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop");
         background-size: cover; background-position: center; background-attachment: fixed;
@@ -16,10 +17,52 @@ st.markdown("""
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(0, 0, 0, 0.6); z-index: -1;
     }
+    
+    /* Títulos */
     .main-title { color: white; text-align: center; font-size: 50px; font-weight: 900; text-shadow: 4px 4px 10px black; }
     .sub-title { text-align: center; color: #f0f0f0; font-size: 18px; text-shadow: 2px 2px 5px black; margin-bottom: 30px; }
-    .content-card { background-color: rgba(255, 255, 255, 0.98); padding: 25px; border-radius: 15px; color: #1b4332; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
-    div.stButton > button { background-color: #2d6a4f !important; color: white !important; border-radius: 10px; font-weight: bold; width: 100%; }
+    
+    /* Cartão de Conteúdo */
+    .content-card { 
+        background-color: rgba(255, 255, 255, 0.95); 
+        padding: 25px; 
+        border-radius: 15px; 
+        color: #1b4332; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+        margin-bottom: 20px; 
+    }
+    
+    /* CUSTOMIZAÇÃO DOS CAMPOS (VERDE ESCURO) */
+    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
+        background-color: #1b4332 !important;
+        border-radius: 8px !important;
+    }
+    
+    input, textarea, div[role="button"] {
+        color: white !important;
+        background-color: #1b4332 !important;
+    }
+    
+    /* Labels (Nomes dos campos) */
+    label {
+        color: #1b4332 !important;
+        font-weight: bold !important;
+    }
+
+    /* Botões */
+    div.stButton > button { 
+        background-color: #2d6a4f !important; 
+        color: white !important; 
+        border-radius: 10px; 
+        font-weight: bold; 
+        width: 100%; 
+        border: none;
+        transition: 0.3s;
+    }
+    div.stButton > button:hover {
+        background-color: #40916c !important;
+        transform: scale(1.02);
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -51,8 +94,6 @@ st.markdown("<div class='sub-title'>Conectando Especialistas ao Produtor Rural</
 
 menu = st.sidebar.selectbox("📍 Navegação", ["🏠 Início", "📝 Cadastro Profissional", "🚜 Buscar Especialistas"])
 
-# --- LÓGICA DAS PÁGINAS ---
-
 if menu == "🏠 Início":
     st.markdown("<div class='content-card' style='text-align:center;'><h2>🏆 Bem-vindo ao AgroMatch</h2><p>O ponto de encontro entre o conhecimento técnico e o campo.</p></div>", unsafe_allow_html=True)
 
@@ -60,7 +101,6 @@ elif menu == "📝 Cadastro Profissional":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.header("📋 Cadastro Profissional")
     
-    # Profissão FORA do form para atualizar as especialidades dinamicamente
     prof_escolhida = st.selectbox("Selecione sua Profissão", list(MAPA_AGRO.keys()))
     
     with st.form("meu_formulario_cadastro"):
