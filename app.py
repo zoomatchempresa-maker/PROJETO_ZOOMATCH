@@ -91,7 +91,7 @@ elif menu == "🚜 Buscar Profissionais":
                 else: st.error("Senha incorreta!")
         with col2:
             # COLOQUE SEU WHATSAPP ABAIXO (Apenas números com DDD)
-            seu_whatsapp = "5581999998888" 
+            seu_whatsapp = "5581999046156" 
             msg = "Olá! Gostaria de solicitar a senha de acesso ao ZooMatch."
             link_zap = f"https://wa.me/{seu_whatsapp}?text={msg.replace(' ', '%20')}"
             st.link_button("🔑 Solicitar Senha", link_zap)
