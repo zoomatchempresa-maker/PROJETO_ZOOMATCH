@@ -114,7 +114,7 @@ elif menu == "🚜 Sou Produtor (Contratar)":
     else:
         st.info("Digite a chave para continuar.")
         st.write("Caso não possua acesso, entre em contato:")
-        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text=Olá!%20Sou%20produtor%20e%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch.")
+        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{5581999046156}?text=Olá!%20Sou%20produtor%20e%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 else:
