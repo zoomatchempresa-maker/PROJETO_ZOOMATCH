@@ -30,10 +30,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- BANCO DE ESPECIALIDADES ---
+# --- BANCO DE ESPECIALIDADES (Sem Diagnóstico por Imagem) ---
 MAPA_AGRO = {
     "Zootecnista": ["Bovinos de Corte", "Bovinos de Leite", "Avicultura", "Suinocultura", "Piscicultura", "Equinocultura", "Ovinos e Caprinos", "Pets (Caes e Gatos)", "Nutricao Animal", "Genetica", "Manejo de Pastagens"],
-    "Médico Veterinário": ["Clinica de Pets", "Clinica de Grandes Animais", "Cirurgia", "Reproducao/IATF", "Sanidade/Vacinas", "Inspecao de Alimentos", "Anestesiologia", "Diagnostico por Imagem"],
+    "Médico Veterinário": ["Clinica de Pets", "Clinica de Grandes Animais", "Cirurgia", "Reproducao/IATF", "Sanidade/Vacinas", "Inspecao de Alimentos", "Anestesiologia", "Patologia"],
     "Engenheiro Agrônomo": ["Graos (Soja/Milho)", "Fruticultura", "Olericultura", "Manejo de Solos", "Fitossanidade", "Irrigacao", "Mecanizacao", "Agricultura de Precisao"],
     "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventario", "Sistemas Agroflorestais", "Recuperacao de Areas", "Tecnologia da Madeira"]
 }
@@ -51,7 +51,6 @@ def carregar_dados():
 # --- INTERFACE ---
 st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
 
-# ALTERACAO NO MENU: Especialista vs Produtor
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
 if menu == "📝 Sou Especialista (Cadastro)":
@@ -59,7 +58,7 @@ if menu == "📝 Sou Especialista (Cadastro)":
     st.header("🎯 Crie sua Vitrine Profissional")
     prof = st.selectbox("Sua Formação:", list(MAPA_AGRO.keys()))
     
-    with st.form("form_registro"):
+    with st.form("form_registro_v3"):
         nome = st.text_input("Nome Completo")
         uf = st.selectbox("Estado de Atuacao", ESTADOS)
         reg = st.text_input("Registro (CRMV/CREA)")
@@ -79,7 +78,27 @@ if menu == "📝 Sou Especialista (Cadastro)":
                     st.success("✅ Perfil publicado com sucesso!")
                     st.balloons()
                 except:
-                    st.error("Erro de permissao. Verifique se o e-mail do robo e EDITOR na planilha.")
+                    st.error("Erro de permissao. Verifique se o e-mail do robô é EDITOR na planilha.")
             else:
                 st.warning("Preencha Nome, Especialidades e WhatsApp.")
     st.markdown("</div>", unsafe_allow_html=True)
+
+elif menu == "🚜 Sou Produtor (Contratar)":
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.header("🔍 Encontre o Profissional Ideal")
+    df = carregar_dados()
+    if not df.empty:
+        f_p = st.selectbox("Filtrar por Profissão:", ["Todos"] + list(MAPA_AGRO.keys()))
+        df_ex = df if f_p == "Todos" else df[df["Profissão"] == f_p]
+        
+        for _, r in df_ex.iterrows():
+            with st.expander(f"👤 {r['Nome']} ({r['Estado']}) - {r['Profissão']}"):
+                st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
+                st.write(f"📝 **Bio:** {r['Bio']}")
+                st.write(f"💰 **Pretensão:** R$ {r['Pretensão']}")
+                st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+    else:
+        st.info("Ainda não temos profissionais cadastrados.")
+    st.markdown("</div>", unsafe_allow_html=True)
+else:
+    st.markdown("<div class='content-card' style='text-align:center;'><h2>O Elo entre o Talento e o Campo</h2><p>Escolha uma opção no menu lateral para começar.</p></div>", unsafe_allow_html=True)
