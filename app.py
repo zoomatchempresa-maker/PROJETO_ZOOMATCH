@@ -5,68 +5,84 @@ import pandas as pd
 # 1. Configuração da Página
 st.set_page_config(page_title="AgroMatch", page_icon="🐄", layout="centered")
 
-# --- 🎨 ESTILIZAÇÃO VISUAL (Verde Escuro) ---
+# --- 🎨 ESTILIZAÇÃO VISUAL (Design Premium e Limpo) ---
 st.markdown("""
     <style>
-    /* Fundo da página */
+    /* Fundo Principal */
     .stApp {
         background-image: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop");
         background-size: cover; background-position: center; background-attachment: fixed;
     }
     .stApp::before {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.6); z-index: -1;
+        background-color: rgba(0, 0, 0, 0.55); z-index: -1;
     }
     
     /* Títulos */
-    .main-title { color: white; text-align: center; font-size: 50px; font-weight: 900; text-shadow: 4px 4px 10px black; }
-    .sub-title { text-align: center; color: #f0f0f0; font-size: 18px; text-shadow: 2px 2px 5px black; margin-bottom: 30px; }
+    .main-title { color: white; text-align: center; font-size: 52px; font-weight: 900; text-shadow: 3px 3px 8px rgba(0,0,0,0.8); margin-bottom: 5px; }
+    .sub-title { text-align: center; color: #fdfdfd; font-size: 20px; font-weight: 400; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); margin-bottom: 40px; }
     
-    /* Cartão de Conteúdo */
+    /* Card de Conteúdo */
     .content-card { 
-        background-color: rgba(255, 255, 255, 0.95); 
-        padding: 25px; 
-        border-radius: 15px; 
+        background-color: rgba(255, 255, 255, 0.98); 
+        padding: 30px; 
+        border-radius: 20px; 
         color: #1b4332; 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-        margin-bottom: 20px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
-    /* CUSTOMIZAÇÃO DOS CAMPOS (VERDE ESCURO) */
-    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
-        background-color: #1b4332 !important;
-        border-radius: 8px !important;
-    }
-    
-    input, textarea, div[role="button"] {
-        color: white !important;
-        background-color: #1b4332 !important;
-    }
-    
-    /* Labels (Nomes dos campos) */
-    label {
+    /* Estilização dos Inputs (Bonito e Sem Bugs) */
+    .stTextInput input, .stTextArea textarea, .stNumberInput input, .stSelectbox [data-baseweb="select"] {
+        background-color: #f8f9fa !important;
+        border: 2px solid #e9ecef !important;
+        border-radius: 12px !important;
         color: #1b4332 !important;
-        font-weight: bold !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #2d6a4f !important;
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2) !important;
+        background-color: #ffffff !important;
     }
 
-    /* Botões */
+    /* Labels */
+    label {
+        color: #2d6a4f !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Botões Premium */
     div.stButton > button { 
-        background-color: #2d6a4f !important; 
+        background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%) !important;
         color: white !important; 
-        border-radius: 10px; 
-        font-weight: bold; 
-        width: 100%; 
-        border: none;
-        transition: 0.3s;
+        border-radius: 12px !important; 
+        font-weight: bold !important; 
+        padding: 12px 20px !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        transition: all 0.3s ease !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     div.stButton > button:hover {
-        background-color: #40916c !important;
-        transform: scale(1.02);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+        filter: brightness(1.1);
     }
+    
+    /* Expander e Mensagens */
+    .streamlit-expanderHeader { background-color: #f1f8f5 !important; border-radius: 10px !important; color: #1b4332 !important; font-weight: bold !important; }
+    .stAlert { border-radius: 12px !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Mapa de Especialidades
+# 2. Dados e Configurações
 MAPA_AGRO = {
     "Zootecnista": ["Bovinos", "Aves", "Suínos", "Peixes", "Equinos", "Ovinos/Caprinos", "Pets", "Nutrição Animal", "Melhoramento Genético", "Pastagens"],
     "Médico Veterinário": ["Reprodução e IATF", "Sanidade Animal", "Clínica de Grandes", "Clínica de Pequenos (Pets)", "Cirurgia", "Inspeção de Origem Animal"],
@@ -74,7 +90,6 @@ MAPA_AGRO = {
     "Engenheiro Ambiental": ["Licenciamento Ambiental", "CAR", "Outorga de Água", "Recuperação de Áreas Degradadas", "Gestão de Resíduos", "Sustentabilidade/ESG"],
     "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventário Florestal", "Sistemas Agroflorestais", "Produção de Mudas"]
 }
-
 SENHA_MESTRA = "Z00-M4tch-2026#Px"
 
 # 3. Conexão
@@ -88,14 +103,15 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# 4. Interface Principal
+# 4. Títulos
 st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
 st.markdown("<div class='sub-title'>Conectando Especialistas ao Produtor Rural</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("📍 Navegação", ["🏠 Início", "📝 Cadastro Profissional", "🚜 Buscar Especialistas"])
 
+# --- PÁGINAS ---
 if menu == "🏠 Início":
-    st.markdown("<div class='content-card' style='text-align:center;'><h2>🏆 Bem-vindo ao AgroMatch</h2><p>O ponto de encontro entre o conhecimento técnico e o campo.</p></div>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card' style='text-align:center;'><h2>🏆 O Agro conectado</h2><p>Escolha uma opção no menu lateral para começar sua jornada.</p></div>", unsafe_allow_html=True)
 
 elif menu == "📝 Cadastro Profissional":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
@@ -103,7 +119,7 @@ elif menu == "📝 Cadastro Profissional":
     
     prof_escolhida = st.selectbox("Selecione sua Profissão", list(MAPA_AGRO.keys()))
     
-    with st.form("meu_formulario_cadastro"):
+    with st.form("form_final_clean"):
         nome = st.text_input("Nome Completo")
         
         c1, c2 = st.columns(2)
@@ -113,67 +129,19 @@ elif menu == "📝 Cadastro Profissional":
             contato = st.text_input("WhatsApp (Ex: 81999998888)")
         with c2:
             especialidades = st.multiselect("Suas Especialidades Técnicas", MAPA_AGRO[prof_escolhida])
-            pretensao = st.number_input("Pretensão Salarial (R$)", min_value=0)
+            pretensao = st.number_input("Pretensão Salarial Média (R$)", min_value=0)
             
-        bio = st.text_area("Resumo de Experiências")
+        bio = st.text_area("Descreva sua experiência")
         
-        enviar = st.form_submit_button("Finalizar Cadastro")
-        
-        if enviar:
+        if st.form_submit_button("Finalizar Cadastro"):
             if nome and contato and especialidades:
-                novo_perfil = pd.DataFrame([{
-                    "Nome": nome, "Profissão": prof_escolhida, "Registro": registro,
-                    "Especialidades": ", ".join(especialidades), "Contato": contato,
-                    "Pretensão": pretensao, "Bio": bio
-                }])
-                conn.update(data=pd.concat([carregar_dados(), novo_perfil], ignore_index=True))
+                novo = pd.DataFrame([{"Nome": nome, "Profissão": prof_escolhida, "Registro": registro, "Especialidades": ", ".join(especialidades), "Contato": contato, "Pretensão": pretensao, "Bio": bio}])
+                conn.update(data=pd.concat([carregar_dados(), novo], ignore_index=True))
                 st.cache_data.clear()
-                st.success(f"✅ Perfil de {prof_escolhida} cadastrado!")
+                st.success("✨ Perfil cadastrado com sucesso!")
             else:
-                st.warning("Preencha Nome, WhatsApp e Especialidades.")
+                st.warning("⚠️ Preencha os campos obrigatórios.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif menu == "🚜 Buscar Especialistas":
-    if "auth" not in st.session_state:
-        st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-        st.header("🔓 Área do Produtor")
-        senha = st.text_input("Senha de Acesso", type="password")
-        c1, c2 = st.columns(2)
-        with c1:
-            if st.button("Acessar"):
-                if senha == SENHA_MESTRA:
-                    st.session_state["auth"] = True
-                    st.rerun()
-                else: st.error("Senha incorreta")
-        with c2:
-            # AJUSTE SEU WHATSAPP AQUI
-            seu_whatsapp = "5581999998888" 
-            st.link_button("🔑 Solicitar Senha", f"https://wa.me/{seu_whatsapp}?text=Quero%20a%20senha%20do%20AgroMatch")
-        st.markdown("</div>", unsafe_allow_html=True)
-    else:
-        st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-        st.header("🔍 Buscar Profissionais")
-        
-        p_busca = st.selectbox("Quem você procura?", ["Ver Todos"] + list(MAPA_AGRO.keys()))
-        
-        esp_filtro = "Todas"
-        if p_busca != "Ver Todos":
-            esp_filtro = st.selectbox(f"Especialidade em {p_busca}:", ["Todas"] + MAPA_AGRO[p_busca])
-        
-        dados = carregar_dados()
-        if not dados.empty:
-            df_f = dados
-            if p_busca != "Ver Todos":
-                df_f = df_f[df_f['Profissão'] == p_busca]
-                if esp_filtro != "Todas":
-                    df_f = df_f[df_f['Especialidades'].str.contains(esp_filtro, na=False)]
-            
-            st.info(f"Encontramos {len(df_f)} especialistas.")
-            for _, r in df_f.iterrows():
-                with st.expander(f"👤 {r['Nome']} - {r['Profissão']}"):
-                    st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
-                    st.write(f"💰 **Pretensão:** R$ {r['Pretensão']}")
-                    st.write(f"📝 **Bio:** {r['Bio']}")
-                    zap = "https://wa.me/55" + str(r['Contato']).replace(".0","").strip()
-                    st.link_button(f"💬 WhatsApp de {r['Nome']}", zap)
-        st.markdown("</div>", unsafe_allow_html=True)
+    if
