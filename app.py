@@ -23,12 +23,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Mapa de Especialidades (Sincronizado e Corrigido)
+# 2. Mapa de Especialidades TÉCNICAS (Corrigido por Área)
 MAPA_AGRO = {
-    "Zootecnista": ["Bovinos", "Aves", "Suínos", "Peixes", "Equinos", "Ovinos/Caprinos", "Pets", "Nutrição Animal", "Melhoramento Genético"],
-    "Médico Veterinário": ["Clínica de Grandes", "Clínica de Pequenos (Pets)", "Reprodução", "Sanidade Animal", "Cirurgia", "Inspeção de Alimentos"],
-    "Engenheiro Agrônomo": ["Grandes Culturas (Soja/Milho)", "Hortifrúti", "Solo e Adubação", "Irrigação", "Defensivos Agrícolas"],
-    "Engenheiro Florestal": ["Reflorestamento", "Manejo Sustentável", "Recuperação de Áreas", "Inventário Florestal", "Silvicultura"]
+    "Zootecnista": ["Bovinos", "Aves", "Suínos", "Peixes", "Equinos", "Ovinos/Caprinos", "Pets", "Nutrição Animal", "Melhoramento Genético", "Gestão de Pastagens"],
+    "Médico Veterinário": ["Reprodução e IATF", "Sanidade Animal", "Clínica de Grandes", "Clínica de Pequenos (Pets)", "Cirurgia", "Inspeção de Produtos de Origem Animal"],
+    "Engenheiro Agrônomo": ["Grandes Culturas (Soja/Milho)", "Fruticultura", "Olericultura", "Manejo de Solos e Adubação", "Fitossanidade (Pragas/Doenças)", "Tecnologia de Aplicação", "Irrigação e Drenagem"],
+    "Engenheiro Ambiental": ["Licenciamento Ambiental", "CAR (Cadastro Ambiental Rural)", "Outorga de Água", "Recuperação de Áreas Degradadas", "Gestão de Resíduos Agrícolas", "Sustentabilidade/ESG no Campo"],
+    "Engenheiro Florestal": ["Silvicultura (Eucalipto/Pinus)", "Manejo Florestal Sustentável", "Inventário Florestal", "Sistemas Agroflorestais", "Produção de Mudas", "Exploração Florestal"]
 }
 
 SENHA_MESTRA = "Z00-M4tch-2026#Px"
@@ -44,18 +45,18 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# 4. Interface Principal
+# 4. Interface
 st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>Conectando Especialistas ao Produtor Rural</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>Hub de Especialistas para o Agronegócio</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("📍 Navegação", ["🏠 Início", "📝 Cadastro Profissional", "🚜 Buscar Especialistas"])
 
 if menu == "🏠 Início":
-    st.markdown("<div class='content-card' style='text-align:center;'><h2>🏆 Bem-vindo ao AgroMatch</h2><p>O hub de talentos para o agronegócio moderno. Cadastre seu perfil ou encontre o especialista ideal para sua propriedade.</p></div>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card' style='text-align:center;'><h2>🏆 O Agro em um só lugar</h2><p>Conectando Agrônomos, Veterinários, Zootecnistas e Engenheiros aos produtores que buscam excelência técnica.</p></div>", unsafe_allow_html=True)
 
 elif menu == "📝 Cadastro Profissional":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.header("📋 Cadastro Profissional")
+    st.header("📋 Seu Perfil Técnico")
     
     with st.form("form_cadastro"):
         nome = st.text_input("Nome Completo")
@@ -63,18 +64,22 @@ elif menu == "📝 Cadastro Profissional":
         
         c1, c2 = st.columns(2)
         with c1:
-            label_reg = "CRMV" if "Veterinário" in prof_escolhida or "Zootecnista" in prof_escolhida else "CREA"
+            # Lógica de Registro Profissional
+            if prof_escolhida in ["Zootecnista", "Médico Veterinário"]:
+                label_reg = "CRMV"
+            else:
+                label_reg = "CREA"
+            
             registro = st.text_input(f"Seu {label_reg}")
             contato = st.text_input("WhatsApp (Ex: 81999998888)")
         with c2:
-            # Pega as especialidades certas baseadas na profissão acima
-            lista_esp = MAPA_AGRO[prof_escolhida]
-            especialidades = st.multiselect("Suas Especialidades", lista_esp)
-            pretensao = st.number_input("Pretensão Salarial (R$)", min_value=0)
+            # LISTA DINÂMICA: Muda conforme a profissão escolhida!
+            especialidades = st.multiselect("Suas Especialidades Técnicas", MAPA_AGRO[prof_escolhida])
+            pretensao = st.number_input("Pretensão Salarial Média (R$)", min_value=0)
             
-        bio = st.text_area("Resumo de Qualificações")
+        bio = st.text_area("Descreva suas principais experiências e cursos")
         
-        if st.form_submit_button("Cadastrar Perfil"):
+        if st.form_submit_button("Finalizar e Publicar"):
             if nome and contato and especialidades:
                 novo_df = pd.DataFrame([{
                     "Nome": nome, "Profissão": prof_escolhida, "Registro": registro,
@@ -83,27 +88,27 @@ elif menu == "📝 Cadastro Profissional":
                 }])
                 conn.update(data=pd.concat([carregar_dados(), novo_df], ignore_index=True))
                 st.cache_data.clear()
-                st.success("✅ Perfil publicado com sucesso!")
+                st.success(f"✅ Perfil de {prof_escolhida} cadastrado com sucesso!")
             else:
-                st.warning("Preencha todos os campos obrigatórios.")
+                st.warning("Por favor, preencha Nome, WhatsApp e Especialidades.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif menu == "🚜 Buscar Especialistas":
     if "auth" not in st.session_state:
         st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-        st.header("🔓 Área do Produtor")
-        senha = st.text_input("Senha de Acesso", type="password")
+        st.header("🔓 Acesso do Produtor")
+        senha = st.text_input("Digite a Senha de Acesso", type="password")
         c1, c2 = st.columns(2)
         with c1:
-            if st.button("Acessar"):
+            if st.button("Liberar Banco"):
                 if senha == SENHA_MESTRA:
                     st.session_state["auth"] = True
                     st.rerun()
                 else: st.error("Senha incorreta")
         with c2:
-            # TROQUE PELO SEU NÚMERO
+            # Lembre-se de colocar SEU NÚMERO abaixo
             seu_whatsapp = "5581999998888" 
-            st.link_button("🔑 Solicitar Senha", f"https://wa.me/{seu_whatsapp}?text=Quero%20a%20senha%20do%20AgroMatch")
+            st.link_button("🔑 Solicitar Senha", f"https://wa.me/{seu_whatsapp}?text=Gostaria%20da%20senha%20do%20AgroMatch")
         st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.markdown("<div class='content-card'>", unsafe_allow_html=True)
@@ -113,9 +118,25 @@ elif menu == "🚜 Buscar Especialistas":
         
         esp_filtro = "Todas"
         if p_busca != "Ver Todos":
-            # Filtro dinâmico: mostra as especialidades da profissão selecionada
+            # Filtro dinâmico na busca também!
             esp_filtro = st.selectbox(f"Especialidade em {p_busca}:", ["Todas"] + MAPA_AGRO[p_busca])
         
         dados = carregar_dados()
         if not dados.empty:
             df_final = dados
+            if p_busca != "Ver Todos":
+                df_final = df_final[df_final['Profissão'] == p_busca]
+                if esp_filtro != "Todas":
+                    df_final = df_final[df_final['Especialidades'].str.contains(esp_filtro, na=False)]
+            
+            st.info(f"Encontramos {len(df_final)} profissionais.")
+            
+            for _, r in df_final.iterrows():
+                with st.expander(f"👤 {r['Nome']} - {r['Profissão']}"):
+                    st.write(f"🌟 **Foco Técnico:** {r['Especialidades']}")
+                    st.write(f"💳 **Registro:** {r['Registro']}")
+                    st.write(f"💰 **Pretensão:** R$ {r['Pretensão']}")
+                    st.write(f"📝 **Resumo:** {r['Bio']}")
+                    zap = "https://wa.me/55" + str(r['Contato']).replace(".0","").strip()
+                    st.link_button(f"💬 Contatar {r['Nome']}", zap)
+        st.markdown("</div>", unsafe_allow_html=True)
