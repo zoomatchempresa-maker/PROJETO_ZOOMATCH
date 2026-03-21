@@ -29,8 +29,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- ⚙️ CONFIGURAÇÕES DE ACESSO ---
-CHAVE_MESTRE = "Agro2024"  # Sua chave mestre
-SEU_WHATSAPP = "5581999998888" # COLOQUE SEU NÚMERO AQUI (DDI + DDD + NÚMERO)
+CHAVE_MESTRE = "Agro2024"  
+SEU_WHATSAPP = "5581999998888" # Lembre-se de colocar seu número real aqui
 
 # --- ⚙️ BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -74,4 +74,35 @@ if menu == "📝 Sou Especialista (Cadastro)":
                 try:
                     df_antigo = carregar_dados()
                     novo = pd.DataFrame([{"Nome": nome, "Profissão": prof, "Estado": uf, "Registro": reg, "Especialidades": ", ".join(esp), "Contato": tel, "Pretensão": sal, "Bio": bio}])
-                    df_final = pd.concat([df_antigo, novo], ignore_
+                    df_final = pd.concat([df_antigo, novo], ignore_index=True)
+                    conn.update(data=df_final)
+                    st.cache_data.clear()
+                    st.success("✅ Perfil publicado com sucesso!")
+                    st.balloons()
+                except Exception as e:
+                    st.error(f"Erro de conexão: {e}")
+            else:
+                st.warning("⚠️ Preencha os campos obrigatórios.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+elif menu == "🚜 Sou Produtor (Contratar)":
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.header("🔑 Acesso Restrito")
+    senha_inserida = st.text_input("Insira a Chave de Acesso para visualizar os profissionais:", type="password")
+    
+    if senha_inserida == CHAVE_MESTRE:
+        st.success("Acesso Liberado!")
+        df = carregar_dados()
+        if not df.empty:
+            f_p = st.selectbox("Filtrar por Profissão:", ["Todos"] + list(MAPA_AGRO.keys()))
+            df_ex = df if f_p == "Todos" else df[df["Profissão"] == f_p]
+            for _, r in df_ex.iterrows():
+                with st.expander(f"👤 {r['Nome']} ({r['Estado']}) - {r['Profissão']}"):
+                    st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
+                    st.write(f"📝 **Bio:** {r['Bio']}")
+                    st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+        else:
+            st.info("Nenhum profissional cadastrado ainda.")
+    elif senha_inserida != "":
+        st.error("Chave incorreta!")
+        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text=Olá,%20gostaria%20da%2
