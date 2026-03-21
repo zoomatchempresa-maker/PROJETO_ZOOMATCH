@@ -2,15 +2,17 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
-# 1. Configuracao da Pagina
+# 1. Configuração da Página
 st.set_page_config(page_title="AgroMatch | Conectando o Campo", page_icon="🐄", layout="centered")
 
-# --- DESIGN PROFISSIONAL (CSS RESTAURADO) ---
+# --- 🎨 DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
 <style>
 .stApp {
     background-image: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop");
-    background-size: cover; background-position: center; background-attachment: fixed;
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed;
 }
 .stApp::before {
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -28,14 +30,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- BANCO DE ESPECIALIDADES ---
+# --- ⚙️ BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
-    "Zootecnista": ["Bovinos de Corte", "Bovinos de Leite", "Avicultura", "Suinocultura", "Piscicultura", "Equinocultura", "Ovinos e Caprinos", "Pets (Caes e Gatos)", "Nutricao Animal", "Genetica", "Manejo de Pastagens"],
-    "Médico Veterinário": ["Clinica de Pets", "Clinica de Grandes Animais", "Cirurgia", "Reproducao/IATF", "Sanidade/Vacinas", "Inspecao de Alimentos", "Anestesiologia", "Patologia"],
-    "Engenheiro Agrônomo": ["Graos (Soja/Milho)", "Fruticultura", "Olericultura", "Manejo de Solos", "Fitossanidade", "Irrigacao", "Mecanizacao", "Agricultura de Precisao"],
-    "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventario", "Sistemas Agroflorestais", "Recuperacao de Areas", "Tecnologia da Madeira"]
+    "Zootecnista": ["Bovinos de Corte", "Bovinos de Leite", "Avicultura", "Suinocultura", "Piscicultura", "Equinocultura", "Ovinos e Caprinos", "Pets (Cães e Gatos)", "Nutrição Animal", "Genética", "Manejo de Pastagens"],
+    "Médico Veterinário": ["Clínica de Pets", "Clínica de Grandes Animais", "Cirurgia", "Reprodução/IATF", "Sanidade/Vacinas", "Inspeção de Alimentos", "Anestesiologia", "Patologia"],
+    "Engenheiro Agrônomo": ["Grãos (Soja/Milho)", "Fruticultura", "Olericultura", "Manejo de Solos", "Fitossanidade", "Irrigação", "Mecanização", "Agricultura de Precisão"],
+    "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventário", "Sistemas Agroflorestais", "Recuperação de Áreas", "Tecnologia da Madeira"]
 }
 
+ESTADOS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"]
+
+# Conexão que agora vai usar o Service Account do Secrets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def carregar_dados():
@@ -44,7 +49,9 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
+# --- INTERFACE ---
 st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
+
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
 if menu == "📝 Sou Especialista (Cadastro)":
@@ -52,34 +59,47 @@ if menu == "📝 Sou Especialista (Cadastro)":
     st.header("🎯 Crie sua Vitrine Profissional")
     prof = st.selectbox("Sua Formação:", list(MAPA_AGRO.keys()))
     
-    with st.form("form_final_v5"):
+    with st.form("form_registro_final"):
         nome = st.text_input("Nome Completo")
-        tel = st.text_input("WhatsApp (Ex: 81999998888)")
+        uf = st.selectbox("Estado de Atuação", ESTADOS)
+        reg = st.text_input("Registro (CRMV/CREA)")
         esp = st.multiselect("Suas Especialidades", MAPA_AGRO[prof])
+        tel = st.text_input("WhatsApp (Ex: 81999998888)")
+        sal = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
+        bio = st.text_area("Resumo da sua Experiência")
+        
         if st.form_submit_button("🚀 PUBLICAR MEU PERFIL"):
             if nome and tel and esp:
                 try:
-                    df = carregar_dados()
-                    novo = pd.DataFrame([{"Nome": nome, "Profissão": prof, "Especialidades": ", ".join(esp), "Contato": tel}])
-                    df_res = pd.concat([df, novo], ignore_index=True)
-                    conn.update(data=df_res)
+                    df_antigo = carregar_dados()
+                    novo = pd.DataFrame([{"Nome": nome, "Profissão": prof, "Estado": uf, "Registro": reg, "Especialidades": ", ".join(esp), "Contato": tel, "Pretensão": sal, "Bio": bio}])
+                    df_final = pd.concat([df_antigo, novo], ignore_index=True)
+                    conn.update(data=df_final)
                     st.cache_data.clear()
-                    st.success("✅ Perfil publicado!")
+                    st.success("✅ Perfil publicado com sucesso!")
                     st.balloons()
                 except Exception as e:
-                    st.error(f"Erro Real: {e}")
+                    st.error(f"Erro ao salvar: {e}")
             else:
-                st.warning("Preencha Nome, Especialidades e WhatsApp.")
+                st.warning("⚠️ Preencha Nome, Especialidades e WhatsApp.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif menu == "🚜 Sou Produtor (Contratar)":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.header("🔍 Encontre o Profissional Ideal")
     df = carregar_dados()
     if not df.empty:
-        for _, r in df.iterrows():
-            with st.expander(f"{r['Nome']} - {r['Profissão']}"):
-                st.write(f"🌟 {r['Especialidades']}")
-                st.link_button("Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+        f_p = st.selectbox("Filtrar por Profissão:", ["Todos"] + list(MAPA_AGRO.keys()))
+        df_ex = df if f_p == "Todos" else df[df["Profissão"] == f_p]
+        
+        for _, r in df_ex.iterrows():
+            with st.expander(f"👤 {r['Nome']} ({r['Estado']}) - {r['Profissão']}"):
+                st.write(f"🌟 **Especialidades:** {r.get('Especialidades', 'Não informada')}")
+                st.write(f"📝 **Bio:** {r.get('Bio', 'Sem bio')}")
+                st.write(f"💰 **Pretensão:** R$ {r.get('Pretensão', 'A combinar')}")
+                st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+    else:
+        st.info("Ainda não temos profissionais cadastrados.")
     st.markdown("</div>", unsafe_allow_html=True)
 else:
-    st.markdown("<div class='content-card' style='text-align:center;'><h2>O Elo entre o Talento e o Campo</h2></div>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card' style='text-align:center;'><h2>O Elo entre o Talento e o Campo</h2><p>Escolha uma opção no menu lateral para começar.</p></div>", unsafe_allow_html=True)
