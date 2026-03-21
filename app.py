@@ -21,7 +21,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- ⚙️ BANCO DE ESPECIALIDADES ---
+# --- ⚙️ BANCO DE ESPECIALIDADES COMPLETO ---
 MAPA_AGRO = {
     "Zootecnista": [
         "Bovinocultura de Corte", "Bovinocultura de Leite", "Avicultura", "Suinocultura", 
@@ -30,17 +30,17 @@ MAPA_AGRO = {
     ],
     "Médico Veterinário": [
         "Clínica de Pequenos Animais (Pets)", "Clínica de Grandes Animais", "Cirurgia Veterinária",
-        "Reprodução Animal / IATF", "Sanidade e Vacinação", "Inspeção de Produtos de Origem Animal",
-        "Anestesiologia", "Diagnóstico por Imagem", "Patologia Veterinária"
+        "Reprodução Animal / IATF", "Sanidade e Vacinação", "Inspeção de POA",
+        "Anestesiologia", "Diagnóstico por Imagem", "Patologia"
     ],
     "Engenheiro Agrônomo": [
-        "Grãos (Soja, Milho, Trigo)", "Fruticultura", "Olericultura", "Manejo e Conservação de Solos",
-        "Fitossanidade (Pragas e Doenças)", "Irrigação e Drenagem", "Mecanização e Agricultura de Precisão",
-        "Pós-colheita e Armazenamento", "Extensão Rural"
+        "Grãos (Soja, Milho, Trigo)", "Fruticultura", "Olericultura", "Manejo de Solos",
+        "Fitossanidade", "Irrigação e Drenagem", "Mecanização/Agricultura de Precisão",
+        "Pós-colheita", "Extensão Rural"
     ],
     "Engenheiro Florestal": [
         "Silvicultura", "Manejo Florestal Sustentável", "Inventário Florestal",
-        "Sistemas Agroflorestais", "Recuperação de Áreas Degradadas", "Tecnologia de Produtos Florestais"
+        "Sistemas Agroflorestais", "Recuperação de Áreas Degradadas", "Tecnologia Florestal"
     ]
 }
 
@@ -66,7 +66,7 @@ if menu == "📝 Cadastro Profissional":
     
     prof_escolhida = st.selectbox("Selecione sua Profissão", list(MAPA_AGRO.keys()))
     
-    with st.form("form_cadastro_v3"):
+    with st.form("form_cadastro_vfinal"):
         nome = st.text_input("Nome Completo")
         estado = st.selectbox("Estado de Atuação", ESTADOS)
         registro = st.text_input("Registro Profissional (CRMV / CREA)")
@@ -75,34 +75,8 @@ if menu == "📝 Cadastro Profissional":
         pretensao = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
         bio = st.text_area("Bio / Experiência Profissional")
         
+        # Botão de envio obrigatório dentro do form
         enviar = st.form_submit_button("🚀 PUBLICAR MEU PERFIL")
         
         if enviar:
-            if nome and contato and especialidades:
-                try:
-                    df_atual = carregar_dados()
-                    novo = pd.DataFrame([{
-                        "Nome": nome, "Profissão": prof_escolhida, "Estado": estado,
-                        "Registro": registro, "Especialidades": ", ".join(especialidades),
-                        "Contato": contato, "Pretensão": pretensao, "Bio": bio
-                    }])
-                    df_final = pd.concat([df_atual, novo], ignore_index=True)
-                    conn.update(data=df_final)
-                    st.cache_data.clear()
-                    st.success("✅ Perfil publicado com sucesso!")
-                    st.balloons()
-                except Exception as e:
-                    st.error(f"Erro ao salvar: Verifique se a planilha aceita edições.")
-            else:
-                st.warning("⚠️ Preencha os campos obrigatórios.")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-elif menu == "🚜 Buscar Especialistas":
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.header("🔍 Buscar Profissionais")
-    dados = carregar_dados()
-    if not dados.empty:
-        f_prof = st.selectbox("Filtrar Profissão", ["Todos"] + list(MAPA_AGRO.keys()))
-        
-        # LINHA CORRIGIDA ABAIXO:
-        df_exibir =
+            if nome and contato
