@@ -11,7 +11,114 @@ st.markdown("""
 .stApp {
     background-image: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop");
     background-size: coveimport streamlit as st
+from streamlit_gsheets import GSimport streamlit as st
 from streamlit_gsheets import GSheetsConnection
+import pandas as pd
+
+st.set_page_config(page_title="AgroMatch", page_icon="🐄", layout="centered")
+
+# CSS Limpo e sem caracteres invisiveis
+st.markdown("""
+<style>
+.stApp { 
+    background-image: url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop"); 
+    background-size: cover; 
+    background-attachment: fixed; 
+}
+.stApp::before { 
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.6); z-index: -1; 
+}
+.main-title { 
+    color: white; text-align: center; font-size: 40px; font-weight: bold; 
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.8); padding: 20px; 
+}
+.content-card { 
+    background-color: rgba(255,255,255,0.95); padding: 25px; 
+    border-radius: 15px; color: #1b4332; margin-bottom: 20px; 
+}
+</style>
+""", unsafe_allow_html=True)
+
+CHAVE_MESTRE = "Agro2024"
+SEU_WHATSAPP = "5581999998888" # Ajuste aqui
+
+MAPA_AGRO = {
+    "Zootecnista": ["Bovinos de Corte", "Bovinos de Leite", "Avicultura", "Suinocultura", "Nutrição", "Pastagens"],
+    "Médico Veterinário": ["Clínica", "Grandes Animais", "Cirurgia", "Reprodução/IATF", "Sanidade"],
+    "Engenheiro Agrônomo": ["Grãos", "Fruticultura", "Solos", "Fitossanidade", "Irrigação"],
+    "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Recuperação", "Tecnologia da Madeira"]
+}
+
+ESTADOS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"]
+
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+def carregar():
+    try:
+        return conn.read(ttl=0)
+    except:
+        return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
+
+st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
+menu = st.sidebar.selectbox("Menu", ["🏠 Início", "📝 Cadastro", "🚜 Produtor"])
+
+if menu == "📝 Cadastro":
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    prof = st.selectbox("Formação:", list(MAPA_AGRO.keys()))
+    with st.form("f1"):
+        n = st.text_input("Nome")
+        uf = st.selectbox("Estado", ESTADOS)
+        r = st.text_input("Registro")
+        e = st.multiselect("Especialidades", MAPA_AGRO[prof])
+        w = st.text_input("WhatsApp")
+        s = st.number_input("Pretensão (R$)", min_value=0)
+        b = st.text_area("Bio")
+        if st.form_submit_button("🚀 PUBLICAR"):
+            if n and w and e:
+                df = carregar()
+                novo = pd.DataFrame([{"Nome":n,"Profissão":prof,"Estado":uf,"Registro":r,"Especialidades":", ".join(e),"Contato":w,"Pretensão":s,"Bio":b}])
+                conn.update(data=pd.concat([df, novo], ignore_index=True))
+                st.cache_data.clear()
+                st.success("✅ Perfil publicado!")
+                st.balloons()
+            else:
+                st.warning("Preencha Nome, Whats e Especialidades.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+elif menu == "🚜 Produtor":
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    pw = st.text_input("Chave de Acesso:", type="password")
+    if pw == CHAVE_MESTRE:
+        df = carregar()
+        if not df.empty:
+            f = st.selectbox("Filtrar:", ["Todos"] + list(MAPA_AGRO.keys()))
+            df_f = df if f == "Todos" else df[df["Profissão"] == f]
+            for _, r in df_f.iterrows():
+                with st.expander(f"👤 {r['Nome']} ({r['Estado']})"):
+                    st.write(f"🌟 {r['Especialidades']}")
+                    st.write(f"📝 {r['Bio']}")
+                    st.link_button("💬 WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+        else:
+            st.info("Nenhum cadastro encontrado.")
+    elif pw != "":
+        st.error("Chave incorreta!")
+        st.link_button("📲 Solicitar Chave", f"https://wa.me/{SEU_WHATSAPP}")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+else:
+    st.markdown("""
+    <div class='content-card' style='text-align:center;'>
+        <h1>Bem-vindo ao AgroMatch</h1>
+        <p>Conectando produtores a especialistas.</p>
+        <hr>
+        <p><b>📝 Cadastro:</b> Profissionais criam seu perfil.</p>
+        <p><b>🔑 Curadoria:</b> Acesso seguro para produtores.</p>
+        <p><b>🤝 Negócio:</b> Contato direto via WhatsApp.</p>
+        <br>
+        <p>👉 <b>Use o menu ao lado para começar!</b></p>
+    </div>
+    """, unsafe_allow_html=True)heetsConnection
 import pandas as pd
 
 st.set_page_config(page_title="AgroMatch | Conectando o Campo", page_icon="🐄", layout="centered")
