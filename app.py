@@ -32,10 +32,10 @@ st.markdown("""
 
 # --- BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
-    "Zootecnista": ["Bovinocultura de Corte", "Bovinocultura de Leite", "Avicultura", "Suinocultura", "Piscicultura", "Equinocultura", "Ovinos e Caprinos", "Pets (Nutricao)", "Nutricao Animal", "Genetica", "Pastagens"],
-    "Médico Veterinário": ["Clinica de Pets", "Clinica de Grandes", "Cirurgia", "Reproducao/IATF", "Sanidade", "Inspecao de POA", "Anestesiologia", "Imagem", "Patologia"],
-    "Engenheiro Agrônomo": ["Graos", "Fruticultura", "Olericultura", "Solos", "Fitossanidade", "Irrigacao", "Mecanizacao", "Pos-colheita"],
-    "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventario", "Sistemas Agroflorestais", "Recuperacao de Areas", "Tecnologia Florestal"]
+    "Zootecnista": ["Bovinos de Corte", "Bovinos de Leite", "Avicultura", "Suinocultura", "Piscicultura", "Equinocultura", "Ovinos e Caprinos", "Pets (Caes e Gatos)", "Nutricao Animal", "Genetica", "Manejo de Pastagens"],
+    "Médico Veterinário": ["Clinica de Pets", "Clinica de Grandes Animais", "Cirurgia", "Reproducao/IATF", "Sanidade/Vacinas", "Inspecao de Alimentos", "Anestesiologia", "Diagnostico por Imagem"],
+    "Engenheiro Agrônomo": ["Graos (Soja/Milho)", "Fruticultura", "Olericultura", "Manejo de Solos", "Fitossanidade", "Irrigacao", "Mecanizacao", "Agricultura de Precisao"],
+    "Engenheiro Florestal": ["Silvicultura", "Manejo Florestal", "Inventario", "Sistemas Agroflorestais", "Recuperacao de Areas", "Tecnologia da Madeira"]
 }
 
 ESTADOS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"]
@@ -51,23 +51,24 @@ def carregar_dados():
 # --- INTERFACE ---
 st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
 
-menu = st.sidebar.selectbox("Navegação", ["Início", "Cadastro", "Buscar"])
+# ALTERACAO NO MENU: Especialista vs Produtor
+menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
-if menu == "Cadastro":
+if menu == "📝 Sou Especialista (Cadastro)":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.header("📋 Cadastro Profissional")
-    prof = st.selectbox("Profissão", list(MAPA_AGRO.keys()))
+    st.header("🎯 Crie sua Vitrine Profissional")
+    prof = st.selectbox("Sua Formação:", list(MAPA_AGRO.keys()))
     
-    with st.form("form_vfinal"):
+    with st.form("form_registro"):
         nome = st.text_input("Nome Completo")
-        uf = st.selectbox("Estado", ESTADOS)
+        uf = st.selectbox("Estado de Atuacao", ESTADOS)
         reg = st.text_input("Registro (CRMV/CREA)")
-        esp = st.multiselect("Especialidades", MAPA_AGRO[prof])
+        esp = st.multiselect("Suas Especialidades", MAPA_AGRO[prof])
         tel = st.text_input("WhatsApp (Ex: 81999998888)")
-        sal = st.number_input("Pretensão (R$)", min_value=0)
-        bio = st.text_area("Bio/Resumo")
+        sal = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
+        bio = st.text_area("Resumo da sua Experiência")
         
-        if st.form_submit_button("🚀 PUBLICAR"):
+        if st.form_submit_button("🚀 PUBLICAR MEU PERFIL"):
             if nome and tel and esp:
                 try:
                     df_antigo = carregar_dados()
@@ -75,25 +76,10 @@ if menu == "Cadastro":
                     df_final = pd.concat([df_antigo, novo], ignore_index=True)
                     conn.update(data=df_final)
                     st.cache_data.clear()
-                    st.success("✅ Perfil publicado!")
+                    st.success("✅ Perfil publicado com sucesso!")
                     st.balloons()
                 except:
-                    st.error("Erro ao salvar. Verifique se o e-mail do robô é EDITOR na planilha.")
+                    st.error("Erro de permissao. Verifique se o e-mail do robo e EDITOR na planilha.")
             else:
                 st.warning("Preencha Nome, Especialidades e WhatsApp.")
     st.markdown("</div>", unsafe_allow_html=True)
-
-elif menu == "Buscar":
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.header("🔍 Buscar Especialistas")
-    df = carregar_dados()
-    if not df.empty:
-        f_p = st.selectbox("Filtrar Profissão", ["Todos"] + list(MAPA_AGRO.keys()))
-        df_ex = df if f_p == "Todos" else df[df["Profissão"] == f_p]
-        for _, r in df_ex.iterrows():
-            with st.expander(f"{r['Nome']} ({r['Estado']})"):
-                st.write(f"🌟 {r['Especialidades']}")
-                st.link_button("WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
-    st.markdown("</div>", unsafe_allow_html=True)
-else:
-    st.markdown("<div class='content-card' style='text-align:center;'><h2>Bem-vindo!</h2><p>Conectando o Agro brasileiro.</p></div>", unsafe_allow_html=True)
