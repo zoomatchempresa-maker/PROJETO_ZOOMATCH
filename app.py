@@ -21,7 +21,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- ⚙️ BANCO DE ESPECIALIDADES (VETERINÁRIA, ZOOTECNIA E ENGENHARIAS) ---
+# --- ⚙️ BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
     "Zootecnista": [
         "Bovinocultura de Corte", "Bovinocultura de Leite", "Avicultura", "Suinocultura", 
@@ -66,20 +66,15 @@ if menu == "📝 Cadastro Profissional":
     
     prof_escolhida = st.selectbox("Selecione sua Profissão", list(MAPA_AGRO.keys()))
     
-    # INÍCIO DO FORMULÁRIO
-    with st.form("form_cadastro_final"):
+    with st.form("form_cadastro_v3"):
         nome = st.text_input("Nome Completo")
         estado = st.selectbox("Estado de Atuação", ESTADOS)
         registro = st.text_input("Registro Profissional (CRMV / CREA)")
-        
-        # Aqui as especialidades mudam de acordo com a profissão acima
         especialidades = st.multiselect("Suas Especialidades Técnicas", MAPA_AGRO[prof_escolhida])
-        
         contato = st.text_input("WhatsApp (Ex: 81999998888)")
         pretensao = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
         bio = st.text_area("Bio / Experiência Profissional")
         
-        # BOTÃO DENTRO DO FORMULÁRIO
         enviar = st.form_submit_button("🚀 PUBLICAR MEU PERFIL")
         
         if enviar:
@@ -99,7 +94,7 @@ if menu == "📝 Cadastro Profissional":
                 except Exception as e:
                     st.error(f"Erro ao salvar: Verifique se a planilha aceita edições.")
             else:
-                st.warning("⚠️ Preencha os campos obrigatórios: Nome, Especialidades e Contato.")
+                st.warning("⚠️ Preencha os campos obrigatórios.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 elif menu == "🚜 Buscar Especialistas":
@@ -108,4 +103,6 @@ elif menu == "🚜 Buscar Especialistas":
     dados = carregar_dados()
     if not dados.empty:
         f_prof = st.selectbox("Filtrar Profissão", ["Todos"] + list(MAPA_AGRO.keys()))
+        
+        # LINHA CORRIGIDA ABAIXO:
         df_exibir =
