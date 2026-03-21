@@ -28,9 +28,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- ⚙️ CONFIGURAÇÕES DE ACESSO (ATUALIZADO) ---
-CHAVE_MESTRE = "Z00-M4tch-2026#Px"  # <--- NOVA SENHA DEFINIDA AQUI
-SEU_WHATSAPP = "5581999998888" # COLOQUE SEU NÚMERO AQUI
+# --- ⚙️ CONFIGURAÇÕES DE ACESSO ---
+CHAVE_MESTRE = "Z00-M4tch-2026#Px"
+SEU_WHATSAPP = "5581999998888" # <--- COLOQUE SEU NÚMERO AQUI (DDI + DDD + NÚMERO)
 
 # --- ⚙️ BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -65,7 +65,7 @@ if menu == "📝 Sou Especialista (Cadastro)":
         uf = st.selectbox("Estado de Atuação", ESTADOS)
         reg = st.text_input("Registro (CRMV/CREA)")
         esp = st.multiselect("Suas Especialidades", MAPA_AGRO[prof])
-        tel = st.text_input("WhatsApp (Ex: 55819...)")
+        tel = st.text_input("WhatsApp (Ex: 81999998888)")
         sal = st.number_input("Pretensão Salarial/Diária (R$)", min_value=0)
         bio = st.text_area("Resumo da sua Experiência")
         
@@ -105,11 +105,16 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
         else:
             st.info("Nenhum profissional cadastrado ainda.")
+            
     elif senha_inserida != "":
         st.error("Chave incorreta!")
-        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}")
+        st.write("Ainda não tem a chave? Clique no botão abaixo para solicitar:")
+        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text=Olá!%20Sou%20produtor%20e%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch.")
+        
     else:
         st.info("Digite a chave para continuar.")
+        st.write("Caso não possua acesso, entre em contato:")
+        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text=Olá!%20Sou%20produtor%20e%20gostaria%20da%20chave%20de%20acesso%20do%20AgroMatch.")
     st.markdown("</div>", unsafe_allow_html=True)
 
 else:
