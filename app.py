@@ -102,7 +102,15 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                 with st.expander(f"👤 {r['Nome']} ({r['Estado']}) - {r['Profissão']}"):
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
-                    st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{str(r['Contato']).strip()}")
+                    # 1. Transforma em texto e remove parênteses, traços e espaços
+contato_limpo = str(r['Contato']).replace("(", "").replace(")", "").replace("-", "").replace(" ", "").strip()
+
+# 2. Se o número não tiver o 55 (Brasil), o código coloca automaticamente
+if not contato_limpo.startswith("55"):
+    contato_limpo = "55" + contato_limpo
+
+# 3. Cria o botão com o número 100% limpo
+st.link_button(f"💬 Chamar no WhatsApp", f"https://wa.me/{contato_limpo}")
         else:
             st.info("Nenhum profissional cadastrado ainda.")
             
