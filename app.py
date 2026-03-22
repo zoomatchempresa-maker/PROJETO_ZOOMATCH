@@ -55,22 +55,20 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE (LOGO E TITULO) ---
-st.markdown("<br>", unsafe_allow_html=True) 
+# --- TESTE DE LOGO ---
+import os
 
-# Criamos colunas para centralizar a imagem no meio da tela
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    try:
-        # Tenta carregar a imagem logo.png
-        st.image("logo.png", use_container_width=True)
-    except:
-        # Se nao houver imagem, nao exibe erro
-        pass
+st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
 
-# Exibe o nome ZooMatch logo abaixo da imagem
-st.markdown("<h1 style='color: white; text-align: center; margin-top: -20px; font-weight: 900;'>ZooMatch</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color: white; text-align: center; font-style: italic; margin-top: -10px;'>Conectando o Agro</p>", unsafe_allow_html=True)
+# Isso vai nos mostrar se o arquivo 'logo.png' realmente existe na pasta
+if os.path.exists("logo.png"):
+    st.image("logo.png", width=250)
+else:
+    st.warning("⚠️ O arquivo 'logo.png' não foi encontrado na pasta raiz do GitHub!")
+    # Lista os arquivos que o Streamlit está vendo para te ajudar
+    st.write("Arquivos detectados:", os.listdir("."))
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
