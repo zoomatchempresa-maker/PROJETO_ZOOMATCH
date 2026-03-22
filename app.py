@@ -4,7 +4,7 @@ import pandas as pd
 import re # Importado para a limpeza do WhatsApp
 
 # 1. Configuracao da Pagina
-st.set_page_config(page_title="AgroElit | Conectando o Campo", page_icon="🌾", layout="centered")
+st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐄", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
@@ -52,18 +52,18 @@ def carregar_dados():
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
 # --- INTERFACE ---
-st.markdown("<div class='main-title'>🌾 AgroElit</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>🐄 ZooMatch</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
 if menu == "🏠 Início":
     st.markdown("""
     <div class='content-card' style='text-align:center;'>
-        <h2 style='color: #1b4332;'>Bem-vindo ao AgroElit</h2>
+        <h2 style='color: #1b4332;'>Bem-vindo ao ZooMatch</h2>
         <p style='font-size: 18px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>
         <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
         <p style='text-align: justify;'>
-            O <b>AgroElit</b> é uma vitrine exclusiva para especialistas do campo. 
+            O <b>ZooMatch</b> é uma vitrine exclusiva para especialistas do campo. 
             Nossa plataforma permite que Médicos Veterinários, Zootecnistas e Agrônomos 
             publiquem seus perfis, facilitando o acesso de produtores rurais que buscam 
             mão de obra qualificada e especializada.
