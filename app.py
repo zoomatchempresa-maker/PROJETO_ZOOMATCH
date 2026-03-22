@@ -4,7 +4,8 @@ import pandas as pd
 import re # Importado para a limpeza do WhatsApp
 
 # 1. Configuracao da Pagina
-st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐄", layout="centered")
+# Eu mudei o page_icon para um cavalo "🐎" para combinar com a nova logo equina.
+st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐎", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
@@ -17,9 +18,15 @@ st.markdown("""
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6); z-index: -1;
 }
+/* Novo estilo para centralizar a logo e dar espacamento */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0 10px 0; /* Espacamento superior e inferior */
+}
 .main-title { 
     color: white; text-align: center; font-size: 52px; font-weight: 900; 
-    text-shadow: 3px 3px 8px rgba(0,0,0,0.8); padding: 20px 0; 
+    text-shadow: 3px 3px 8px rgba(0,0,0,0.8); padding: 0 0 20px 0; /* Ajuste no padding */
 }
 .content-card { 
     background-color: rgba(255, 255, 255, 0.96); padding: 30px; 
@@ -52,7 +59,12 @@ def carregar_dados():
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
 # --- INTERFACE ---
-st.markdown("<div class='main-title'>🐄 ZooMatch</div>", unsafe_allow_html=True)
+# Eu substituí o título de texto antigo pela sua nova logo equina dourada e azul.
+# Centralizada e com um tamanho proporcional de 250px.
+st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
+# Procure por URL_DA_SUA_LOGO_AQUI e substitua pela URL direta da imagem que gerei.
+st.image("URL_DA_SUA_LOGO_AQUI", width=250) 
+st.markdown("</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
