@@ -52,10 +52,16 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE (LOGO AQUI) ---
+# --- INTERFACE (LOGO ATUALIZADA) ---
 st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-# Utilizando a URL da logo que criamos por último (Azul e Dourada)
-st.image("https://raw.githubusercontent.com/InacioCirilo/ZooMatch/main/logo_zoomatch_fix.png", width=300) # Se você já subiu pro GitHub, use o link RAW, senão use o link da imagem anterior
+
+# Tentativa de carregar o arquivo local 'logo.png' que você deve subir ao GitHub
+try:
+    st.image("logo.png", width=300)
+except:
+    # Caso o arquivo não seja encontrado, exibe o título em texto para não dar erro
+    st.markdown("<h1 style='color: white; text-align: center;'>ZooMatch</h1>", unsafe_allow_html=True)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
