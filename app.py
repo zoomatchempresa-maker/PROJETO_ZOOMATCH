@@ -74,7 +74,7 @@ if menu == "🏠 Início":
                 <b>📝 Cadastro</b><br><small>Crie seu perfil profissional em minutos.</small>
             </div>
             <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
-                <b>🔑 Segurança</b><br><small>Acesso restrito para produtores curados.</small>
+                <b>🔑 Segurança</b><br><small>Acesso restrito para produtores.</small>
             </div>
             <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
                 <b>🤝 Negócio</b><br><small>Contato direto sem intermediários.</small>
