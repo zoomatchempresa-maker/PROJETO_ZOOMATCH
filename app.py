@@ -33,8 +33,6 @@ st.markdown("""
 # --- CONFIGURACOES DE ACESSO ---
 CHAVE_MESTRE = "Z00-M4tch-2026#Px"
 SEU_WHATSAPP = "5581999046156"
-
-# Mensagem automatica formatada para URL (Espacos viram %20)
 MSG_AUTOMATICA = "Olá!%20Gostaria%20de%20solicitar%20a%20chave%20de%20acesso%20para%20o%20ZooMatch."
 
 # --- BANCO DE ESPECIALIDADES ---
@@ -55,40 +53,26 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- TESTE DE LOGO ---
-import os
+# --- INTERFACE (LOGO E TITULO) ---
+st.markdown("<br>", unsafe_allow_html=True) 
 
-st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    try:
+        st.image("logo.png", use_container_width=True)
+    except:
+        pass
 
-# Isso vai nos mostrar se o arquivo 'logo.png' realmente existe na pasta
-if os.path.exists("logo.png"):
-    st.image("logo.png", width=250)
-else:
-    st.warning("⚠️ O arquivo 'logo.png' não foi encontrado na pasta raiz do GitHub!")
-    # Lista os arquivos que o Streamlit está vendo para te ajudar
-    st.write("Arquivos detectados:", os.listdir("."))
-
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<h1 style='color: white; text-align: center; margin-top: -20px; font-weight: 900;'>ZooMatch</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: white; text-align: center; font-style: italic; margin-top: -10px;'>Conectando o Agro</p>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
 if menu == "🏠 Início":
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    
-    # Criamos duas colunas: uma estreita para a logo e uma larga para o texto
-    col_logo, col_texto = st.columns([1, 4])
-    
-    with col_logo:
-        try:
-            st.image("logo.png", width=80) # Ajustei o tamanho para ficar harmonioso
-        except:
-            st.write("🐄") # Emoji de reserva caso a logo falhe
-            
-    with col_texto:
-        st.markdown("<h2 style='color: #1b4332; margin-top: 10px;'>Bem-vindo ao ZooMatch</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='font-size: 18px; margin-top: -10px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>", unsafe_allow_html=True)
-    
     st.markdown("""
+    <div class='content-card' style='text-align:center;'>
+        <h2 style='color: #1b4332;'>Bem-vindo ao ZooMatch</h2>
+        <p style='font-size: 18px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>
         <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
         <p style='text-align: justify;'>
             O <b>ZooMatch</b> é uma vitrine exclusiva para especialistas do campo. 
@@ -98,18 +82,18 @@ if menu == "🏠 Início":
         </p>
         <br>
         <div style='display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;'>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
                 <b>📝 Cadastro</b><br><small>Crie seu perfil profissional em minutos.</small>
             </div>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
                 <b>🔑 Segurança</b><br><small>Acesso restrito para produtores.</small>
             </div>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
                 <b>🤝 Negócio</b><br><small>Contato direto sem intermediários.</small>
             </div>
         </div>
         <br>
-        <p style='color: #2d6a4f; font-weight: bold; text-align: center;'>👉 Utilize o menu lateral para começar!</p>
+        <p style='color: #2d6a4f; font-weight: bold;'>👉 Utilize o menu lateral para começar!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -174,10 +158,8 @@ elif menu == "🚜 Sou Produtor (Contratar)":
             
     elif senha_inserida != "":
         st.error("Chave incorreta!")
-        # AQUI FOI ADICIONADA A MENSAGEM AUTOMATICA
         st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
     else:
         st.info("Digite a chave para continuar.")
-        # AQUI FOI ADICIONADA A MENSAGEM AUTOMATICA
         st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
     st.markdown("</div>", unsafe_allow_html=True)
