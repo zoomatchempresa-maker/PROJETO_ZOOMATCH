@@ -3,7 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import re
 
-# 1. Configuracao da Pagina
+# 1. CONFIGURACAO DA PAGINA
 st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐎", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
@@ -17,11 +17,6 @@ st.markdown("""
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6); z-index: -1;
 }
-.logo-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-}
 .content-card { 
     background-color: rgba(255, 255, 255, 0.96); padding: 30px; 
     border-radius: 20px; color: #1b4332; 
@@ -33,7 +28,9 @@ st.markdown("""
 # --- CONFIGURACOES DE ACESSO ---
 CHAVE_MESTRE = "Z00-M4tch-2026#Px"
 SEU_WHATSAPP = "5581999046156"
-MSG_AUTOMATICA = "Olá!%20Gostaria%20de%20solicitar%20a%20chave%20de%20acesso%20para%20o%20ZooMatch."
+
+# Mensagem para pedir a CHAVE (vai para VOCÊ)
+MSG_PEDIR_CHAVE = "Olá!%20Gostaria%20de%20solicitar%20a%20chave%20de%20acesso%20para%20o%20ZooMatch."
 
 # --- BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -53,9 +50,8 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE (LOGO E TITULO) ---
+# --- INTERFACE (LOGO CENTRALIZADA) ---
 st.markdown("<br>", unsafe_allow_html=True) 
-
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     try:
@@ -68,6 +64,7 @@ st.markdown("<p style='color: white; text-align: center; font-style: italic; mar
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
+# --- ABA 1: INICIO ---
 if menu == "🏠 Início":
     st.markdown("""
     <div class='content-card' style='text-align:center;'>
@@ -97,6 +94,7 @@ if menu == "🏠 Início":
     </div>
     """, unsafe_allow_html=True)
 
+# --- ABA 2: CADASTRO ---
 elif menu == "📝 Sou Especialista (Cadastro)":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.header("🎯 Crie sua Vitrine Profissional")
@@ -127,6 +125,7 @@ elif menu == "📝 Sou Especialista (Cadastro)":
                 st.warning("⚠️ Preencha os campos obrigatórios.")
     st.markdown("</div>", unsafe_allow_html=True)
 
+# --- ABA 3: PRODUTOR (CONTRATAR) ---
 elif menu == "🚜 Sou Produtor (Contratar)":
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.header("🔑 Acesso Restrito")
@@ -144,13 +143,16 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
                     
+                    # --- CONTATO DO PROFISSIONAL ---
                     num_bruto = str(r['Contato'])
                     if '.' in num_bruto: num_bruto = num_bruto.split('.')[0]
                     c_limpo = re.sub(r'\D', '', num_bruto) 
                     
                     if c_limpo:
                         if not c_limpo.startswith("55"): c_limpo = "55" + c_limpo
-                        st.link_button("💬 Chamar no WhatsApp", f"https://wa.me/{c_limpo}")
+                        # MENSAGEM PARA O ESPECIALISTA
+                        msg_especialista = f"Olá%20{r['Nome']},%20vi%20seu%20perfil%20no%20ZooMatch%20e%20gostaria%20de%20conversar%20sobre%20seus%20serviços."
+                        st.link_button("💬 Chamar no WhatsApp", f"https://wa.me/{c_limpo}?text={msg_especialista}")
                     else:
                         st.warning("Número de contato inválido.")
         else:
@@ -158,8 +160,8 @@ elif menu == "🚜 Sou Produtor (Contratar)":
             
     elif senha_inserida != "":
         st.error("Chave incorreta!")
-        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
+        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_PEDIR_CHAVE}")
     else:
         st.info("Digite a chave para continuar.")
-        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
+        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_PEDIR_CHAVE}")
     st.markdown("</div>", unsafe_allow_html=True)
