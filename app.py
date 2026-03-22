@@ -1,10 +1,10 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
-import re # Importado para a limpeza do WhatsApp
+import re
 
 # 1. Configuracao da Pagina
-st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐄", layout="centered")
+st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐎", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
@@ -17,9 +17,10 @@ st.markdown("""
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6); z-index: -1;
 }
-.main-title { 
-    color: white; text-align: center; font-size: 52px; font-weight: 900; 
-    text-shadow: 3px 3px 8px rgba(0,0,0,0.8); padding: 20px 0; 
+.logo-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
 }
 .content-card { 
     background-color: rgba(255, 255, 255, 0.96); padding: 30px; 
@@ -31,7 +32,10 @@ st.markdown("""
 
 # --- CONFIGURACOES DE ACESSO ---
 CHAVE_MESTRE = "Z00-M4tch-2026#Px"
-SEU_WHATSAPP = "5581999046156" # <--- MUDE PARA O SEU NUMERO REAL AQUI
+SEU_WHATSAPP = "5581999046156"
+
+# Mensagem automatica formatada para URL (Espacos viram %20)
+MSG_AUTOMATICA = "Olá!%20Gostaria%20de%20solicitar%20a%20chave%20de%20acesso%20para%20o%20ZooMatch."
 
 # --- BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -51,8 +55,13 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE ---
-st.markdown("<div class='main-title'>🐄 ZooMatch</div>", unsafe_allow_html=True)
+# --- INTERFACE (LOGO) ---
+st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
+try:
+    st.image("logo.png", width=300)
+except:
+    st.markdown("<h1 style='color: white; text-align: center;'>ZooMatch</h1>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
@@ -132,11 +141,8 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
                     
-                    # --- LIMPEZA DE CONTATO CORRIGIDA ---
                     num_bruto = str(r['Contato'])
-                    # Remove o .0 se houver
                     if '.' in num_bruto: num_bruto = num_bruto.split('.')[0]
-                    # Remove tudo que não for número
                     c_limpo = re.sub(r'\D', '', num_bruto) 
                     
                     if c_limpo:
@@ -149,8 +155,10 @@ elif menu == "🚜 Sou Produtor (Contratar)":
             
     elif senha_inserida != "":
         st.error("Chave incorreta!")
-        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}")
+        # AQUI FOI ADICIONADA A MENSAGEM AUTOMATICA
+        st.link_button("📲 Solicitar Chave via WhatsApp", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
     else:
         st.info("Digite a chave para continuar.")
-        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}")
+        # AQUI FOI ADICIONADA A MENSAGEM AUTOMATICA
+        st.link_button("📲 Solicitar Chave de Acesso", f"https://wa.me/{SEU_WHATSAPP}?text={MSG_AUTOMATICA}")
     st.markdown("</div>", unsafe_allow_html=True)
