@@ -4,7 +4,6 @@ import pandas as pd
 import re # Importado para a limpeza do WhatsApp
 
 # 1. Configuracao da Pagina
-# Eu mudei o page_icon para um cavalo "🐎" para combinar com a nova logo equina.
 st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐎", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
@@ -18,15 +17,10 @@ st.markdown("""
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6); z-index: -1;
 }
-/* Novo estilo para centralizar a logo e dar espacamento */
 .logo-container {
     display: flex;
     justify-content: center;
-    padding: 30px 0 10px 0; /* Espacamento superior e inferior */
-}
-.main-title { 
-    color: white; text-align: center; font-size: 52px; font-weight: 900; 
-    text-shadow: 3px 3px 8px rgba(0,0,0,0.8); padding: 0 0 20px 0; /* Ajuste no padding */
+    padding: 20px 0;
 }
 .content-card { 
     background-color: rgba(255, 255, 255, 0.96); padding: 30px; 
@@ -38,7 +32,7 @@ st.markdown("""
 
 # --- CONFIGURACOES DE ACESSO ---
 CHAVE_MESTRE = "Z00-M4tch-2026#Px"
-SEU_WHATSAPP = "5581999046156" # <--- MUDE PARA O SEU NUMERO REAL AQUI
+SEU_WHATSAPP = "5581999046156"
 
 # --- BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -58,12 +52,10 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE ---
-# Eu substituí o título de texto antigo pela sua nova logo equina dourada e azul.
-# Centralizada e com um tamanho proporcional de 250px.
+# --- INTERFACE (LOGO AQUI) ---
 st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-# Procure por URL_DA_SUA_LOGO_AQUI e substitua pela URL direta da imagem que gerei.
-st.image("URL_DA_SUA_LOGO_AQUI", width=250) 
+# Utilizando a URL da logo que criamos por último (Azul e Dourada)
+st.image("https://raw.githubusercontent.com/InacioCirilo/ZooMatch/main/logo_zoomatch_fix.png", width=300) # Se você já subiu pro GitHub, use o link RAW, senão use o link da imagem anterior
 st.markdown("</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
@@ -144,11 +136,8 @@ elif menu == "🚜 Sou Produtor (Contratar)":
                     st.write(f"🌟 **Especialidades:** {r['Especialidades']}")
                     st.write(f"📝 **Bio:** {r['Bio']}")
                     
-                    # --- LIMPEZA DE CONTATO CORRIGIDA ---
                     num_bruto = str(r['Contato'])
-                    # Remove o .0 se houver
                     if '.' in num_bruto: num_bruto = num_bruto.split('.')[0]
-                    # Remove tudo que não for número
                     c_limpo = re.sub(r'\D', '', num_bruto) 
                     
                     if c_limpo:
