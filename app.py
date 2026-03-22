@@ -55,13 +55,22 @@ def carregar_dados():
     except:
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
-# --- INTERFACE (LOGO) ---
-st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-try:
-    st.image("logo.png", width=300)
-except:
-    st.markdown("<h1 style='color: white; text-align: center;'>ZooMatch</h1>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
+# --- INTERFACE (LOGO E TITULO) ---
+st.markdown("<br>", unsafe_allow_html=True) 
+
+# Criamos colunas para centralizar a imagem no meio da tela
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    try:
+        # Tenta carregar a imagem logo.png
+        st.image("logo.png", use_container_width=True)
+    except:
+        # Se nao houver imagem, nao exibe erro
+        pass
+
+# Exibe o nome ZooMatch logo abaixo da imagem
+st.markdown("<h1 style='color: white; text-align: center; margin-top: -20px; font-weight: 900;'>ZooMatch</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: white; text-align: center; font-style: italic; margin-top: -10px;'>Conectando o Agro</p>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
