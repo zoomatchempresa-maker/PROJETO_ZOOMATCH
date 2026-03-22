@@ -4,7 +4,7 @@ import pandas as pd
 import re
 
 # 1. CONFIGURACAO DA PAGINA
-st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐎", layout="centered")
+st.set_page_config(page_title="ZooMatch | Conectando o Campo", page_icon="🐄", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
@@ -90,7 +90,7 @@ if menu == "🏠 Início":
             </div>
         </div>
         <br>
-        <p style='color: #2d6a4f; font-weight: bold;'>👉 Utilize o menu lateral para começar!</p>
+        <p style='color: #2d6a4f; font-weight: bold;'>👈 Utilize o menu lateral para começar!</p>
     </div>
     """, unsafe_allow_html=True)
 
