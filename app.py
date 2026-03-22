@@ -52,7 +52,7 @@ def carregar_dados():
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
 # --- INTERFACE ---
-st.markdown("<div class='main-title'>🐄 AgroElite</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>🌾 AgroElit</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
