@@ -59,11 +59,11 @@ menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especia
 if menu == "🏠 Início":
     st.markdown("""
     <div class='content-card' style='text-align:center;'>
-        <h2 style='color: #1b4332;'>Bem-vindo ao AgroMatch</h2>
+        <h2 style='color: #1b4332;'>Bem-vindo ao AgroElit</h2>
         <p style='font-size: 18px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>
         <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
         <p style='text-align: justify;'>
-            O <b>AgroMatch</b> é uma vitrine exclusiva para especialistas do campo. 
+            O <b>AgroElit</b> é uma vitrine exclusiva para especialistas do campo. 
             Nossa plataforma permite que Médicos Veterinários, Zootecnistas e Agrônomos 
             publiquem seus perfis, facilitando o acesso de produtores rurais que buscam 
             mão de obra qualificada e especializada.
