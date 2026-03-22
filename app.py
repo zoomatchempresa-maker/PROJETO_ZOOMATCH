@@ -73,10 +73,22 @@ st.markdown("</div>", unsafe_allow_html=True)
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
 if menu == "🏠 Início":
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    
+    # Criamos duas colunas: uma estreita para a logo e uma larga para o texto
+    col_logo, col_texto = st.columns([1, 4])
+    
+    with col_logo:
+        try:
+            st.image("logo.png", width=80) # Ajustei o tamanho para ficar harmonioso
+        except:
+            st.write("🐄") # Emoji de reserva caso a logo falhe
+            
+    with col_texto:
+        st.markdown("<h2 style='color: #1b4332; margin-top: 10px;'>Bem-vindo ao ZooMatch</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 18px; margin-top: -10px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>", unsafe_allow_html=True)
+    
     st.markdown("""
-    <div class='content-card' style='text-align:center;'>
-        <h2 style='color: #1b4332;'>Bem-vindo ao ZooMatch</h2>
-        <p style='font-size: 18px;'>Conectando a inteligência técnica ao coração do agronegócio.</p>
         <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
         <p style='text-align: justify;'>
             O <b>ZooMatch</b> é uma vitrine exclusiva para especialistas do campo. 
@@ -86,18 +98,18 @@ if menu == "🏠 Início":
         </p>
         <br>
         <div style='display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;'>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
                 <b>📝 Cadastro</b><br><small>Crie seu perfil profissional em minutos.</small>
             </div>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
                 <b>🔑 Segurança</b><br><small>Acesso restrito para produtores.</small>
             </div>
-            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px;'>
+            <div style='flex: 1; min-width: 150px; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;'>
                 <b>🤝 Negócio</b><br><small>Contato direto sem intermediários.</small>
             </div>
         </div>
         <br>
-        <p style='color: #2d6a4f; font-weight: bold;'>👉 Utilize o menu lateral para começar!</p>
+        <p style='color: #2d6a4f; font-weight: bold; text-align: center;'>👉 Utilize o menu lateral para começar!</p>
     </div>
     """, unsafe_allow_html=True)
 
