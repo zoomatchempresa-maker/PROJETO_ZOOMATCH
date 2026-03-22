@@ -4,7 +4,7 @@ import pandas as pd
 import re # Importado para a limpeza do WhatsApp
 
 # 1. Configuracao da Pagina
-st.set_page_config(page_title="AgroMatch | Conectando o Campo", page_icon="🐄", layout="centered")
+st.set_page_config(page_title="AgroElit | Conectando o Campo", page_icon="🌾", layout="centered")
 
 # --- DESIGN PROFISSIONAL (CSS) ---
 st.markdown("""
@@ -31,7 +31,7 @@ st.markdown("""
 
 # --- CONFIGURACOES DE ACESSO ---
 CHAVE_MESTRE = "Z00-M4tch-2026#Px"
-SEU_WHATSAPP = "5581999998888" # <--- MUDE PARA O SEU NUMERO REAL AQUI
+SEU_WHATSAPP = "5581999046156" # <--- MUDE PARA O SEU NUMERO REAL AQUI
 
 # --- BANCO DE ESPECIALIDADES ---
 MAPA_AGRO = {
@@ -52,7 +52,7 @@ def carregar_dados():
         return pd.DataFrame(columns=["Nome", "Profissão", "Estado", "Registro", "Especialidades", "Contato", "Pretensão", "Bio"])
 
 # --- INTERFACE ---
-st.markdown("<div class='main-title'>🐄 AgroMatch</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>🐄 AgroElite</div>", unsafe_allow_html=True)
 
 menu = st.sidebar.selectbox("Quem é você?", ["🏠 Início", "📝 Sou Especialista (Cadastro)", "🚜 Sou Produtor (Contratar)"])
 
